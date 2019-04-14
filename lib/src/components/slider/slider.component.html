@@ -1,0 +1,25 @@
+<div
+    [class]="'slider' + (klass ? ' ' + klass : '')"
+    widget
+    (mousedown)="handleDrag($event)"
+    (touchstart)="handleDrag($event)"
+    (tapped)="update($event)"
+    tabindex="0"
+    (focus)="focus()"
+    (blur)="blur()"
+>
+    <div class="bar" #bar [class.vertical]="options?.vertical">
+        <div
+            class="progress"
+            [style.width]="options?.vertical ? '' : ((model - min) / (max - min)) * 100 + '%'"
+            [style.height]="options?.vertical ? ((model - min) / (max - min)) * 100 + '%' : ''"
+        ></div>
+        <div
+            class="knob"
+            [style.left]="options?.vertical ? '' : ((model - min) / (max - min)) * 100 + '%'"
+            [style.bottom]="options?.vertical ? ((model - min) / (max - min)) * 100 + '%' : ''"
+        >
+            <div class="handle"></div>
+        </div>
+    </div>
+</div>
