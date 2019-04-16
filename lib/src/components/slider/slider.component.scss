@@ -12,6 +12,10 @@
             width: 1.5em;
             box-shadow: 0 1px 3px 0 rgba(#000, .2), 0 1px 1px 0 rgba(#000, .14), 0 2px 1px -1px rgba(#000, .12);
         }
+
+        .value {
+            opacity: 1;
+        }
     }
 }
 
@@ -62,6 +66,9 @@
 
 .handle {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -71,4 +78,11 @@
     border-radius: 100%;
     border: 1px solid #ccc;
     background-color: #fff;
+}
+
+.value {
+    opacity: 0;
+    transition: opacity 200ms;
+    font-size: .6em;
+    user-select: none;
 }

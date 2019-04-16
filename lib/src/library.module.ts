@@ -25,9 +25,9 @@ const COMPONENTS: Type<any>[] = [SliderComponent];
     exports: [...COMPONENTS]
 })
 class LibraryModule {
-    public static version = '0.1.0';
+    public static version = '0.1.1';
     private static init = false;
-    private build = dayjs(1552621020000);
+    private build = dayjs(1555417560000);
 
     constructor() {
         if (!LibraryModule.init) {

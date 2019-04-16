@@ -19,7 +19,9 @@
             [style.left]="options?.vertical ? '' : ((value - min) / (max - min)) * 100 + '%'"
             [style.bottom]="options?.vertical ? ((value - min) / (max - min)) * 100 + '%' : ''"
         >
-            <div class="handle"></div>
+            <div class="handle">
+                <div class="value">{{value}}</div>
+            </div>
         </div>
     </div>
 </div>
