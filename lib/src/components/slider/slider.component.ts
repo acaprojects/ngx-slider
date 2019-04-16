@@ -18,6 +18,8 @@ export interface ISliderOptions {
     vertical: boolean;
 }
 
+type FIELD_TYPE = number;
+
 @Component({
     selector: 'a-slider',
     templateUrl: './slider.component.html',
@@ -35,8 +37,6 @@ export class SliderComponent implements OnChanges, ControlValueAccessor {
     @Input() public id: string;
     /** CSS class to add to the root element of the component */
     @Input() public klass = 'default';
-    /** State of the slider */
-    @Input() public model = 0;
     /** Minimum value of the slider */
     @Input() public min = 0;
     /** Maximum value of the slider */
@@ -45,13 +45,14 @@ export class SliderComponent implements OnChanges, ControlValueAccessor {
     @Input() public step = 1;
     /** Options for the slider */
     @Input() public options: ISliderOptions;
-    /** Change emitter for the date timestamp */
-    @Output() public modelChange = new EventEmitter<number>();
+
+    /** Current value of the slider */
+    public value: FIELD_TYPE;
 
     /** Form control on change handler */
-    public onChange: (_: number) => void;
+    private _onChange: (_: FIELD_TYPE) => void;
     /** Form control on touch handler */
-    public onTouch: (_: number) => void;
+    private _onTouch: (_: FIELD_TYPE) => void;
 
     private wheel_listener: () => void;
     private drag_listener: () => void;
@@ -98,9 +99,11 @@ export class SliderComponent implements OnChanges, ControlValueAccessor {
                 ? 1 - (center.y - box.top) / box.height
                 : (center.x - box.left) / box.width;
         const range = (this.max - this.min) / this.step;
-        this.model = Math.round(position * range) * this.step + this.min;
+        this.value = Math.round(position * range) * this.step + this.min;
         this.checkBounds();
-        this.modelChange.emit(this.model);
+        if (this._onChange) {
+            this._onChange(this.value);
+        }
     }
 
     /**
@@ -136,12 +139,14 @@ export class SliderComponent implements OnChanges, ControlValueAccessor {
      */
     private handleWheel(event: WheelEvent) {
         event.preventDefault();
-        if (!this.model) {
-            this.model = this.min;
+        if (!this.value) {
+            this.value = this.min;
         }
-        this.model += event.deltaY < 0 ? this.step || 1 : -this.step || -1;
+        this.value += event.deltaY < 0 ? this.step || 1 : -this.step || -1;
         this.checkBounds();
-        this.modelChange.emit(this.model);
+        if (this._onChange) {
+            this._onChange(this.value);
+        }
     }
 
     /**
@@ -151,35 +156,34 @@ export class SliderComponent implements OnChanges, ControlValueAccessor {
         if (this.min > this.max) {
             this.min = this.max - this.step;
         }
-        if (this.model < this.min) {
-            this.model = this.min;
-        } else if (this.model > this.max) {
-            this.model = this.max;
+        if (this.value < this.min) {
+            this.value = this.min;
+        } else if (this.value > this.max) {
+            this.value = this.max;
         }
     }
 
     /**
      * Update local value when form control value is changed
-     * @param value
+     * @param value The new value for the component
      */
-    public writeValue(value: number) {
-        this.model = value;
-        this.modelChange.emit(this.model);
+    public writeValue(value: FIELD_TYPE) {
+        this.value = value;
     }
 
     /**
-     * Register on change callback given for form control
-     * @param fn
+     * Registers a callback function that is called when the control's value changes in the UI.
+     * @param fn The callback function to register
      */
-    public registerOnChange(fn: (_: number) => void): void {
-        this.onChange = fn;
+    public registerOnChange(fn: (_: FIELD_TYPE) => void): void {
+        this._onChange = fn;
     }
 
     /**
-     * Register on touched callback given for form control
-     * @param fn
+     * Registers a callback function is called by the forms API on initialization to update the form model on blur.
+     * @param fn The callback function to register
      */
-    public registerOnTouched(fn: (_: number) => void): void {
-        this.onTouch = fn;
+    public registerOnTouched(fn: (_: FIELD_TYPE) => void): void {
+        this._onTouch = fn;
     }
 }

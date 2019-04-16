@@ -11,13 +11,13 @@
     <div class="bar" #bar [class.vertical]="options?.vertical">
         <div
             class="progress"
-            [style.width]="options?.vertical ? '' : ((model - min) / (max - min)) * 100 + '%'"
-            [style.height]="options?.vertical ? ((model - min) / (max - min)) * 100 + '%' : ''"
+            [style.width]="options?.vertical ? '' : ((value - min) / (max - min)) * 100 + '%'"
+            [style.height]="options?.vertical ? ((value - min) / (max - min)) * 100 + '%' : ''"
         ></div>
         <div
             class="knob"
-            [style.left]="options?.vertical ? '' : ((model - min) / (max - min)) * 100 + '%'"
-            [style.bottom]="options?.vertical ? ((model - min) / (max - min)) * 100 + '%' : ''"
+            [style.left]="options?.vertical ? '' : ((value - min) / (max - min)) * 100 + '%'"
+            [style.bottom]="options?.vertical ? ((value - min) / (max - min)) * 100 + '%' : ''"
         >
             <div class="handle"></div>
         </div>
